@@ -9,11 +9,12 @@ Attributes:
 - Users
   - id int
   - name varchar
+  - email varchar
   - password_hash
   - occupation varchar
   - avatar_filename varchar
   - role varchar
-  - token varchar
+  - remember_token varchar
   - created_at datetime
   - updated_at datetime
 - Campaigns
@@ -21,7 +22,10 @@ Attributes:
   - user_id int
   - name varchar
   - slug varchar
+  - short_description varchar
+  - description text
   - goal_amount float(decimal)
+  - current_amount float(decimal)
   - backer_count int
   - perks text
   - created_at datetime
@@ -37,6 +41,8 @@ Attributes:
   - id int
   - user_id int
   - campaign_id int
-  - fund_amount float
+  - amount float
+  - status varchar
+  - code varchar
   - created_at datetime
   - updated_at datetime
