@@ -1,12 +1,7 @@
 package config
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/raflynagachi/crowdfunding-web/helpers"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 type DBConfig struct {
@@ -25,20 +20,4 @@ func (dbConfig *DBConfig) SetupEnv() {
 	dbConfig.DBName = helpers.GetEnv("DB_NAME", "go-fund")
 	dbConfig.DBUser = helpers.GetEnv("DB_USERNAME", "admin")
 	dbConfig.DBPass = helpers.GetEnv("DB_PASSWORD", "password")
-}
-
-func OpenDB(dbConfig DBConfig) *gorm.DB {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbConfig.DBUser,
-		dbConfig.DBPass,
-		dbConfig.DBHost,
-		dbConfig.DBPort,
-		dbConfig.DBName,
-	)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Database connected to localhost:3306")
-	return db
 }
