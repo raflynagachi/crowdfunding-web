@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/raflynagachi/crowdfunding-web/app"
 	"github.com/raflynagachi/crowdfunding-web/app/config"
 )
 
@@ -13,7 +14,7 @@ func GetDBConnection() {
 
 func MigrateDB(fresh bool) {
 	dbConfig, _ := config.ConfigEnv()
-	db := config.OpenDB(dbConfig)
+	db := app.OpenDB(dbConfig)
 
 	defer fmt.Println("Database migrating...")
 	for _, model := range RegisterModel() {
