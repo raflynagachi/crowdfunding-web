@@ -2,6 +2,9 @@ package models
 
 import "time"
 
+const UserRole = "user"
+const AdminRole = "admin"
+
 type User struct {
 	ID             int    `gorm:"primaryKey"`
 	Name           string `gorm:"not null"`

@@ -3,13 +3,17 @@ package main
 import (
 	"flag"
 
+	"github.com/raflynagachi/crowdfunding-web/app"
 	"github.com/raflynagachi/crowdfunding-web/app/cmd"
 	"github.com/raflynagachi/crowdfunding-web/app/config"
+	"github.com/raflynagachi/crowdfunding-web/controllers"
+	"github.com/raflynagachi/crowdfunding-web/repositories"
+	"github.com/raflynagachi/crowdfunding-web/services"
 )
 
 func main() {
-	dbConfig, _ := config.ConfigEnv()
-	config.OpenDB(dbConfig)
+	dbConfig, appConfig := config.ConfigEnv()
+	db := app.OpenDB(dbConfig)
 
 	flag.Parse()
 	narg := flag.NArg()
@@ -17,9 +21,10 @@ func main() {
 		cmd.RootCmd.Execute()
 	}
 
-	// userRepository := repositories.NewUserRepository(db)
-	// userRepository.Create(models.User{
-	// 	Name: "Nagachi",
-	// })
+	userRepository := repositories.NewUserRepository(db)
+	userService := services.NewUserService(userRepository)
+	userController := controllers.NewUserController(userService)
 
+	router := app.NewRouter(userController)
+	router.Run(":" + appConfig.AppPort)
 }
