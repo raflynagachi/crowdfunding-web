@@ -1,8 +1,8 @@
 package web
 
 type UserCreateRequest struct {
-	Name       string `json:"name"`
-	Email      string `json:"email"`
-	Occupation string `json:"occupation"`
-	Password   string `json:"password"`
+	Name       string `json:"name" binding:"required"`
+	Email      string `json:"email" binding:"required,email"`
+	Occupation string `json:"occupation" binding:"required"`
+	Password   string `json:"password" binding:"required"`
 }
