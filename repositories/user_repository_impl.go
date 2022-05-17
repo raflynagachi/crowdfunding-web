@@ -15,7 +15,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (repository *UserRepositoryImpl) Create(user models.User) (models.User, error) {
+func (repository *UserRepositoryImpl) Register(user models.User) (models.User, error) {
 	err := repository.DB.Debug().Create(&user).Error
 	if err != nil {
 		return user, err
@@ -23,18 +23,11 @@ func (repository *UserRepositoryImpl) Create(user models.User) (models.User, err
 	return user, nil
 }
 
-func (repository *UserRepositoryImpl) Update(user models.User) (models.User, error) {
-	panic("not implemented") // TODO: Implement
-}
-
-func (repository *UserRepositoryImpl) Delete(user models.User) error {
-	panic("not implemented") // TODO: Implement
-}
-
-func (repository *UserRepositoryImpl) FindById(userID int) (models.User, error) {
-	panic("not implemented") // TODO: Implement
-}
-
-func (repository *UserRepositoryImpl) FindAll() ([]models.User, error) {
-	panic("not implemented") // TODO: Implement
+func (repository *UserRepositoryImpl) Login(userEmail string) (models.User, error) {
+	var user models.User
+	err := repository.DB.Debug().Where("email = ?", userEmail).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }

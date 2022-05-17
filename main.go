@@ -24,8 +24,8 @@ func main() {
 
 	userRepository := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepository)
-	userController := controllers.NewUserController(userService)
+	authController := controllers.NewAuthController(userService)
 
-	router := app.NewRouter(userController)
+	router := app.NewRouter(authController)
 	router.Run(":" + appConfig.AppPort)
 }
