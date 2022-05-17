@@ -10,17 +10,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserServiceImpl struct {
-	repository repositories.UserRepository
+type AuthServiceImpl struct {
+	repository repositories.AuthRepository
 }
 
-func NewUserService(repository repositories.UserRepository) UserService {
-	return &UserServiceImpl{
+func NewAuthService(repository repositories.AuthRepository) AuthService {
+	return &AuthServiceImpl{
 		repository: repository,
 	}
 }
 
-func (service *UserServiceImpl) Register(r web.AuthRegisterRequest) (web.UserResponse, error) {
+func (service *AuthServiceImpl) Register(r web.AuthRegisterRequest) (web.UserResponse, error) {
 	userResponse := web.UserResponse{}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(r.Password), bcrypt.MinCost)
 	if err != nil {
@@ -42,7 +42,7 @@ func (service *UserServiceImpl) Register(r web.AuthRegisterRequest) (web.UserRes
 	return helpers.UserToUserResponse(user), nil
 }
 
-func (service *UserServiceImpl) Login(r web.AuthLoginRequest) (web.UserResponse, error) {
+func (service *AuthServiceImpl) Login(r web.AuthLoginRequest) (web.UserResponse, error) {
 	userResponse := web.UserResponse{}
 	email := r.Email
 	password := r.Password
@@ -62,4 +62,17 @@ func (service *UserServiceImpl) Login(r web.AuthLoginRequest) (web.UserResponse,
 	}
 
 	return helpers.UserToUserResponse(user), nil
+}
+
+func (service *AuthServiceImpl) IsEmailAvailable(r web.AuthIsEmailAvailableRequest) (bool, error) {
+	email := r.Email
+	user, err := service.repository.Login(email)
+	if err != nil {
+		return false, err
+	}
+
+	if user.ID == 0 {
+		return true, nil
+	}
+	return false, nil
 }

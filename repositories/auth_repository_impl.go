@@ -5,17 +5,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepositoryImpl struct {
+type AuthRepositoryImpl struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
-	return &UserRepositoryImpl{
+func NewAuthRepository(db *gorm.DB) AuthRepository {
+	return &AuthRepositoryImpl{
 		DB: db,
 	}
 }
 
-func (repository *UserRepositoryImpl) Register(user models.User) (models.User, error) {
+func (repository *AuthRepositoryImpl) Register(user models.User) (models.User, error) {
 	err := repository.DB.Debug().Create(&user).Error
 	if err != nil {
 		return user, err
@@ -23,7 +23,7 @@ func (repository *UserRepositoryImpl) Register(user models.User) (models.User, e
 	return user, nil
 }
 
-func (repository *UserRepositoryImpl) Login(userEmail string) (models.User, error) {
+func (repository *AuthRepositoryImpl) Login(userEmail string) (models.User, error) {
 	var user models.User
 	err := repository.DB.Debug().Where("email = ?", userEmail).Find(&user).Error
 	if err != nil {

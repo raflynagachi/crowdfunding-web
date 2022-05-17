@@ -8,15 +8,10 @@ import (
 	"github.com/raflynagachi/crowdfunding-web/app/config"
 )
 
-func GetDBConnection() {
-
-}
-
-func MigrateDB(fresh bool) {
-	dbConfig, _ := config.ConfigEnv()
+func MigrateDB(dbConfig config.DBConfig, fresh bool) {
 	db := app.OpenDB(dbConfig)
 
-	defer fmt.Println("Database migrating...")
+	fmt.Println("Database migrating...")
 	for _, model := range RegisterModel() {
 		if fresh {
 			err := db.Debug().Migrator().DropTable(model.Model)
@@ -36,4 +31,20 @@ func MigrateDB(fresh bool) {
 	} else {
 		fmt.Println("Database migration successfully")
 	}
+}
+
+func TruncateDB(dbConfig config.DBConfig) {
+	db := app.OpenDB(dbConfig)
+
+	fmt.Println("Database truncate start...")
+	for _, model := range RegisterModel() {
+		query := fmt.Sprintf("DELETE FROM %s", model.TableName)
+
+		err := db.Debug().Exec(query).Error
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	fmt.Println("Database truncate successfully")
 }

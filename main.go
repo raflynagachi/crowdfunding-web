@@ -22,9 +22,9 @@ func main() {
 		return
 	}
 
-	userRepository := repositories.NewUserRepository(db)
-	userService := services.NewUserService(userRepository)
-	authController := controllers.NewAuthController(userService)
+	authRepository := repositories.NewAuthRepository(db)
+	authService := services.NewAuthService(authRepository)
+	authController := controllers.NewAuthController(authService)
 
 	router := app.NewRouter(authController)
 	router.Run(":" + appConfig.AppPort)

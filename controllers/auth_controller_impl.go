@@ -10,10 +10,10 @@ import (
 )
 
 type AuthControllerImpl struct {
-	service services.UserService
+	service services.AuthService
 }
 
-func NewAuthController(service services.UserService) AuthController {
+func NewAuthController(service services.AuthService) AuthController {
 	return &AuthControllerImpl{
 		service: service,
 	}
@@ -36,7 +36,7 @@ func (controller *AuthControllerImpl) Register(c *gin.Context) {
 	userResponse, err := controller.service.Register(input)
 	if err != nil {
 		webResponse.Code = http.StatusUnprocessableEntity
-		webResponse.Data = gin.H{"errors": err}
+		webResponse.Data = gin.H{"errors": err.Error()}
 		c.JSON(http.StatusInternalServerError, webResponse)
 		return
 	}
@@ -74,5 +74,33 @@ func (controller *AuthControllerImpl) Login(c *gin.Context) {
 	webResponse.Status = "OK"
 	webResponse.Data = userResponse
 
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (controller *AuthControllerImpl) IsEmailAvailable(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Status: "error",
+	}
+
+	var input web.AuthIsEmailAvailableRequest
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		webResponse.Code = http.StatusUnprocessableEntity
+		webResponse.Data = gin.H{"errors": helpers.ValidationErrorsToSlice(err)}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+
+	isEmailAvailable, err := controller.service.IsEmailAvailable(input)
+	if err != nil {
+		webResponse.Code = http.StatusUnprocessableEntity
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = gin.H{"is_available": isEmailAvailable}
 	c.JSON(http.StatusOK, webResponse)
 }
