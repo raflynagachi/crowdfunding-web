@@ -19,6 +19,7 @@ func main() {
 	narg := flag.NArg()
 	if narg != 0 {
 		cmd.RootCmd.Execute()
+		return
 	}
 
 	userRepository := repositories.NewUserRepository(db)
