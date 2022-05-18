@@ -4,18 +4,21 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/raflynagachi/crowdfunding-web/auth/jwt"
 	"github.com/raflynagachi/crowdfunding-web/helpers"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/services"
 )
 
 type AuthControllerImpl struct {
-	service services.AuthService
+	service    services.AuthService
+	jwtService jwt.JwtService
 }
 
-func NewAuthController(service services.AuthService) AuthController {
+func NewAuthController(service services.AuthService, jwtService jwt.JwtService) AuthController {
 	return &AuthControllerImpl{
-		service: service,
+		service:    service,
+		jwtService: jwtService,
 	}
 }
 
@@ -40,6 +43,16 @@ func (controller *AuthControllerImpl) Register(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, webResponse)
 		return
 	}
+
+	// jwt tokenGenerated
+	token, err := controller.jwtService.GenerateToken(userResponse.ID)
+	if err != nil {
+		webResponse.Code = http.StatusUnprocessableEntity
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+	userResponse.TokenRemember = token
 
 	webResponse.Code = http.StatusOK
 	webResponse.Status = "OK"
@@ -69,6 +82,16 @@ func (controller *AuthControllerImpl) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, webResponse)
 		return
 	}
+
+	// jwt tokenGenerated
+	token, err := controller.jwtService.GenerateToken(userResponse.ID)
+	if err != nil {
+		webResponse.Code = http.StatusUnprocessableEntity
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+	userResponse.TokenRemember = token
 
 	webResponse.Code = http.StatusOK
 	webResponse.Status = "OK"

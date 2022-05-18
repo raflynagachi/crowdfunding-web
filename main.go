@@ -6,6 +6,7 @@ import (
 	"github.com/raflynagachi/crowdfunding-web/app"
 	"github.com/raflynagachi/crowdfunding-web/app/cmd"
 	"github.com/raflynagachi/crowdfunding-web/app/config"
+	"github.com/raflynagachi/crowdfunding-web/auth/jwt"
 	"github.com/raflynagachi/crowdfunding-web/controllers"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 	"github.com/raflynagachi/crowdfunding-web/services"
@@ -25,7 +26,9 @@ func main() {
 	userRepository := repositories.NewUserRepository(db)
 
 	authService := services.NewAuthService(userRepository)
-	authController := controllers.NewAuthController(authService)
+	jwtService := jwt.NewJwtService()
+	authController := controllers.NewAuthController(authService, jwtService)
+
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService)
 
