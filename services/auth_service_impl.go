@@ -11,10 +11,10 @@ import (
 )
 
 type AuthServiceImpl struct {
-	repository repositories.AuthRepository
+	repository repositories.UserRepository
 }
 
-func NewAuthService(repository repositories.AuthRepository) AuthService {
+func NewAuthService(repository repositories.UserRepository) AuthService {
 	return &AuthServiceImpl{
 		repository: repository,
 	}
@@ -35,7 +35,7 @@ func (service *AuthServiceImpl) Register(r web.AuthRegisterRequest) (web.UserRes
 		Role:         models.UserRole,
 	}
 
-	user, err = service.repository.Register(user)
+	user, err = service.repository.Create(user)
 	if err != nil {
 		return userResponse, err
 	}
@@ -47,7 +47,7 @@ func (service *AuthServiceImpl) Login(r web.AuthLoginRequest) (web.UserResponse,
 	email := r.Email
 	password := r.Password
 
-	user, err := service.repository.Login(email)
+	user, err := service.repository.FindByEmail(email)
 	if err != nil {
 		return userResponse, err
 	}
@@ -66,7 +66,7 @@ func (service *AuthServiceImpl) Login(r web.AuthLoginRequest) (web.UserResponse,
 
 func (service *AuthServiceImpl) IsEmailAvailable(r web.AuthIsEmailAvailableRequest) (bool, error) {
 	email := r.Email
-	user, err := service.repository.Login(email)
+	user, err := service.repository.FindByEmail(email)
 	if err != nil {
 		return false, err
 	}

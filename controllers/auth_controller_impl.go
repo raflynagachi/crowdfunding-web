@@ -37,7 +37,7 @@ func (controller *AuthControllerImpl) Register(c *gin.Context) {
 	if err != nil {
 		webResponse.Code = http.StatusUnprocessableEntity
 		webResponse.Data = gin.H{"errors": err.Error()}
-		c.JSON(http.StatusInternalServerError, webResponse)
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
 		return
 	}
 
@@ -79,13 +79,13 @@ func (controller *AuthControllerImpl) Login(c *gin.Context) {
 
 func (controller *AuthControllerImpl) IsEmailAvailable(c *gin.Context) {
 	webResponse := web.WebResponse{
+		Code:   http.StatusUnprocessableEntity,
 		Status: "error",
 	}
 
 	var input web.AuthIsEmailAvailableRequest
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		webResponse.Code = http.StatusUnprocessableEntity
 		webResponse.Data = gin.H{"errors": helpers.ValidationErrorsToSlice(err)}
 		c.JSON(http.StatusUnprocessableEntity, webResponse)
 		return
@@ -93,7 +93,6 @@ func (controller *AuthControllerImpl) IsEmailAvailable(c *gin.Context) {
 
 	isEmailAvailable, err := controller.service.IsEmailAvailable(input)
 	if err != nil {
-		webResponse.Code = http.StatusUnprocessableEntity
 		webResponse.Data = gin.H{"errors": err.Error()}
 		c.JSON(http.StatusUnprocessableEntity, webResponse)
 		return

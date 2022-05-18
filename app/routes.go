@@ -5,13 +5,14 @@ import (
 	"github.com/raflynagachi/crowdfunding-web/controllers"
 )
 
-func NewRouter(authController controllers.AuthController) *gin.Engine {
+func NewRouter(controller controllers.Controller) *gin.Engine {
 	router := gin.Default()
 	apiRoot := router.Group("/api/v1")
 
-	apiRoot.POST("/register", authController.Register)
-	apiRoot.POST("/login", authController.Login)
-	apiRoot.POST("/email-checker", authController.IsEmailAvailable)
+	apiRoot.POST("/register", controller.Register)
+	apiRoot.POST("/login", controller.Login)
+	apiRoot.POST("/email-checker", controller.IsEmailAvailable)
+	apiRoot.PUT("/avatars", controller.UpdateAvatar)
 
 	return router
 }
