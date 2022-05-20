@@ -34,7 +34,7 @@ func (controller *UserControllerImpl) UpdateAvatar(c *gin.Context) {
 	}
 
 	user := c.MustGet("user").(models.User)
-	userId := 1
+	userId := user.ID
 
 	path := fmt.Sprintf("assets/avatar_images/%d-%s", userId, file.Filename)
 	err = c.SaveUploadedFile(file, path)
