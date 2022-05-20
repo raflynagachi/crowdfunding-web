@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 )
@@ -15,8 +17,8 @@ func NewUserService(repository repositories.UserRepository) UserService {
 	}
 }
 
-func (service *UserServiceImpl) UpdateAvatar(userId int, fileLocation string) (models.User, error) {
-	user, err := service.repository.FindById(userId)
+func (service *UserServiceImpl) UpdateAvatar(userID int, fileLocation string) (models.User, error) {
+	user, err := service.repository.FindById(userID)
 	if err != nil {
 		return user, err
 	}
@@ -25,6 +27,17 @@ func (service *UserServiceImpl) UpdateAvatar(userId int, fileLocation string) (m
 	user, err = service.repository.Update(user)
 	if err != nil {
 		return user, err
+	}
+	return user, nil
+}
+
+func (service *UserServiceImpl) FindById(userID int) (models.User, error) {
+	user, err := service.repository.FindById(userID)
+	if err != nil {
+		return user, err
+	}
+	if user.ID == 0 {
+		return user, errors.New("no user found")
 	}
 	return user, nil
 }

@@ -12,7 +12,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.POST("/register", controller.Register)
 	apiRoot.POST("/login", controller.Login)
 	apiRoot.POST("/email-checker", controller.IsEmailAvailable)
-	apiRoot.PUT("/avatars", controller.UpdateAvatar)
+	apiRoot.PUT("/avatars", controller.AuthMiddleware.Serve, controller.UpdateAvatar)
 
 	return router
 }

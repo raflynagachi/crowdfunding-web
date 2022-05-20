@@ -8,6 +8,7 @@ import (
 	"github.com/raflynagachi/crowdfunding-web/app/config"
 	"github.com/raflynagachi/crowdfunding-web/auth/jwt"
 	"github.com/raflynagachi/crowdfunding-web/controllers"
+	"github.com/raflynagachi/crowdfunding-web/middleware"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 	"github.com/raflynagachi/crowdfunding-web/services"
 )
@@ -32,7 +33,8 @@ func main() {
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService)
 
-	controller := controllers.RegisterController(authController, userController)
+	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)
+	controller := controllers.RegisterController(authMiddleware, authController, userController)
 
 	router := app.NewRouter(controller)
 	router.Run(":" + appConfig.AppPort)

@@ -43,3 +43,11 @@ func (service *JwtServiceImpl) ParseToken(token string) (*jwt.Token, error) {
 	}
 	return jwtToken, nil
 }
+
+func (service *JwtServiceImpl) JwtTokenToMap(token *jwt.Token) (jwt.MapClaims, error) {
+	claim, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return claim, errors.New("claim doesn't exist")
+	}
+	return claim, nil
+}

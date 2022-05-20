@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/services"
 )
@@ -32,7 +33,7 @@ func (controller *UserControllerImpl) UpdateAvatar(c *gin.Context) {
 		return
 	}
 
-	// TODO: Use JWT to get userId
+	user := c.MustGet("user").(models.User)
 	userId := 1
 
 	path := fmt.Sprintf("assets/avatar_images/%d-%s", userId, file.Filename)
