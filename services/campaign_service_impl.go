@@ -1,7 +1,8 @@
 package services
 
 import (
-	"github.com/raflynagachi/crowdfunding-web/models"
+	"github.com/raflynagachi/crowdfunding-web/helpers"
+	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 )
 
@@ -15,18 +16,20 @@ func NewCampaignService(repository repositories.CampaignRepository) CampaignServ
 	}
 }
 
-func (service *CampaignServiceImpl) FindCampaigns(userID int) ([]models.Campaign, error) {
+func (service *CampaignServiceImpl) FindCampaigns(userID int) ([]web.CampaignResponse, error) {
+	campaignResponses := []web.CampaignResponse{}
+
 	if userID != 0 {
 		campaigns, err := service.repository.FindByUserID(userID)
 		if err != nil {
-			return campaigns, err
+			return campaignResponses, err
 		}
-		return campaigns, nil
+		return helpers.CampaignsToCampaignResponses(campaigns), nil
 	}
 
 	campaigns, err := service.repository.FindAll()
 	if err != nil {
-		return campaigns, err
+		return campaignResponses, err
 	}
-	return campaigns, nil
+	return helpers.CampaignsToCampaignResponses(campaigns), nil
 }

@@ -1,7 +1,9 @@
 package services
 
-import "github.com/raflynagachi/crowdfunding-web/models"
+import (
+	"github.com/raflynagachi/crowdfunding-web/models/web"
+)
 
 type CampaignService interface {
-	FindCampaigns(userID int) ([]models.Campaign, error)
+	FindCampaigns(userID int) ([]web.CampaignResponse, error)
 }

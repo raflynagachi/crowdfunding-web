@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/raflynagachi/crowdfunding-web/app"
 	"github.com/raflynagachi/crowdfunding-web/app/cmd"
@@ -36,12 +35,10 @@ func main() {
 	userController := controllers.NewUserController(userService)
 
 	campaignService := services.NewCampaignService(campaignRepository)
-	camp, _ := campaignService.FindCampaigns(0)
-	fmt.Println("=======================")
-	fmt.Println(camp)
+	campaignController := controllers.NewCampaignController(campaignService)
 
 	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)
-	controller := controllers.RegisterController(authMiddleware, authController, userController)
+	controller := controllers.RegisterController(authMiddleware, authController, userController, campaignController)
 
 	router := app.NewRouter(controller)
 	router.Run(":" + appConfig.AppPort)
