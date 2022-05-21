@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 
 	"github.com/raflynagachi/crowdfunding-web/app"
 	"github.com/raflynagachi/crowdfunding-web/app/cmd"
@@ -25,6 +26,10 @@ func main() {
 	}
 
 	userRepository := repositories.NewUserRepository(db)
+	campaignRepository := repositories.NewCampaignRepository(db)
+	camp, _ := campaignRepository.FindAll()
+	fmt.Println("=======================")
+	fmt.Println(camp)
 
 	authService := services.NewAuthService(userRepository)
 	jwtService := jwt.NewJwtService()

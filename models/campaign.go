@@ -15,4 +15,5 @@ type Campaign struct {
 	Perks            string
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	CampaignImages   []CampaignImage
 }
