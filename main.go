@@ -27,9 +27,6 @@ func main() {
 
 	userRepository := repositories.NewUserRepository(db)
 	campaignRepository := repositories.NewCampaignRepository(db)
-	camp, _ := campaignRepository.FindAll()
-	fmt.Println("=======================")
-	fmt.Println(camp)
 
 	authService := services.NewAuthService(userRepository)
 	jwtService := jwt.NewJwtService()
@@ -37,6 +34,11 @@ func main() {
 
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService)
+
+	campaignService := services.NewCampaignService(campaignRepository)
+	camp, _ := campaignService.FindCampaigns(0)
+	fmt.Println("=======================")
+	fmt.Println(camp)
 
 	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)
 	controller := controllers.RegisterController(authMiddleware, authController, userController)
