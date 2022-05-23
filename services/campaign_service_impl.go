@@ -1,7 +1,11 @@
 package services
 
 import (
+	"fmt"
+
+	"github.com/gosimple/slug"
 	"github.com/raflynagachi/crowdfunding-web/helpers"
+	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 )
@@ -42,4 +46,26 @@ func (service *CampaignServiceImpl) FindCampaign(campaignID int) (web.CampaignDe
 		return campaignResponse, err
 	}
 	return helpers.CampaignToCampaignDetailResponse(campaign), nil
+}
+
+func (service *CampaignServiceImpl) Create(campaignCreateReq web.CampaignCreateRequest) (web.CampaignResponse, error) {
+	campaignResponse := web.CampaignResponse{}
+
+	campaign := models.Campaign{
+		UserID:           campaignCreateReq.UserID,
+		Name:             campaignCreateReq.Name,
+		ShortDescription: campaignCreateReq.ShortDescription,
+		Description:      campaignCreateReq.Description,
+		GoalAmount:       campaignCreateReq.GoalAmount,
+		Perks:            campaignCreateReq.Perks,
+	}
+	slugRaw := fmt.Sprintf("%s %d", campaign.Name, campaign.UserID)
+	campaign.Slug = slug.Make(slugRaw)
+
+	campaign, err := service.repository.Create(campaign)
+	if err != nil {
+		return campaignResponse, err
+	}
+
+	return helpers.CampaignToCampaignResponse(campaign), nil
 }

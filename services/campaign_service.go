@@ -7,4 +7,5 @@ import (
 type CampaignService interface {
 	FindCampaigns(userID int) ([]web.CampaignResponse, error)
 	FindCampaign(campaignID int) (web.CampaignDetailResponse, error)
+	Create(campaign web.CampaignCreateRequest) (web.CampaignResponse, error)
 }

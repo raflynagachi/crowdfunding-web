@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/services"
 )
@@ -18,6 +19,7 @@ func NewCampaignController(service services.CampaignService) CampaignController 
 		service: service,
 	}
 }
+
 func (controller *CampaignControllerImpl) FindCampaigns(c *gin.Context) {
 	webResponse := web.WebResponse{
 		Code:   http.StatusUnprocessableEntity,
@@ -63,5 +65,35 @@ func (controller *CampaignControllerImpl) FindCampaign(c *gin.Context) {
 	webResponse.Code = http.StatusOK
 	webResponse.Status = "OK"
 	webResponse.Data = campaign
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (controller *CampaignControllerImpl) Create(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusBadRequest,
+		Status: "BAD REQUEST",
+	}
+
+	var input web.CampaignCreateRequest
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	currentUser := c.MustGet("user").(models.User)
+	input.User = currentUser
+
+	campaignResponse, err := controller.service.Create(input)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = campaignResponse
 	c.JSON(http.StatusOK, webResponse)
 }

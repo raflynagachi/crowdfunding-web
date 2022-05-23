@@ -46,3 +46,11 @@ func (repository *CampaignRepositoryImpl) FindByID(campaignID int) (models.Campa
 	}
 	return campaign, nil
 }
+
+func (repository *CampaignRepositoryImpl) Create(campaign models.Campaign) (models.Campaign, error) {
+	err := repository.DB.Debug().Create(&campaign).Error
+	if err != nil {
+		return campaign, err
+	}
+	return campaign, nil
+}

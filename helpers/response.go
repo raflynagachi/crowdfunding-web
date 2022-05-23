@@ -1,8 +1,6 @@
 package helpers
 
 import (
-	"strings"
-
 	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 )
@@ -62,10 +60,7 @@ func CampaignToCampaignDetailResponse(campaign models.Campaign) web.CampaignDeta
 		imageUrl = campaign.CampaignImages[0].Filename
 	}
 
-	var perks []string
-	for _, perk := range strings.Split(campaign.Perks, ",") {
-		perks = append(perks, strings.Trim(perk, " "))
-	}
+	perks := PerksToSlice(campaign.Perks)
 
 	campaignUserResponse := web.CampaignUserResponse{
 		Name:     campaign.User.Name,
@@ -96,4 +91,15 @@ func CampaignsToCampaignResponses(campaigns []models.Campaign) []web.CampaignRes
 		campaignsFormatter = append(campaignsFormatter, campaignFormatted)
 	}
 	return campaignsFormatter
+}
+
+func CampaignToCampaignCreateResponse(campaign models.Campaign) web.CampaignResponse {
+	return web.CampaignResponse{
+		ID:               campaign.ID,
+		UserID:           campaign.UserID,
+		Name:             campaign.Name,
+		ShortDescription: campaign.ShortDescription,
+		GoalAmount:       campaign.GoalAmount,
+		Slug:             campaign.Slug,
+	}
 }

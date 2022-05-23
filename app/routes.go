@@ -17,6 +17,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.POST("/email-checker", controller.IsEmailAvailable)
 	apiRoot.PUT("/avatars", controller.AuthMiddleware.Serve, controller.UpdateAvatar)
 
+	apiRoot.POST("/campaigns", controller.AuthMiddleware.Serve, controller.Create)
 	apiRoot.GET("/campaigns", controller.FindCampaigns)
 	apiRoot.GET("/campaigns/:campaignID", controller.FindCampaign)
 
