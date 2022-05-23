@@ -18,6 +18,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.PUT("/avatars", controller.AuthMiddleware.Serve, controller.UpdateAvatar)
 
 	apiRoot.GET("/campaigns", controller.FindCampaigns)
+	apiRoot.GET("/campaigns/:campaignID", controller.FindCampaign)
 
 	return router
 }

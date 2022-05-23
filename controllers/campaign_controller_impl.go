@@ -38,5 +38,30 @@ func (controller *CampaignControllerImpl) FindCampaigns(c *gin.Context) {
 	webResponse.Status = "OK"
 	webResponse.Data = campaigns
 	c.JSON(http.StatusOK, webResponse)
+}
 
+func (controller *CampaignControllerImpl) FindCampaign(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusUnprocessableEntity,
+		Status: "error",
+	}
+
+	campaignID, _ := strconv.Atoi(c.Param("campaignID"))
+	if campaignID == 0 {
+		webResponse.Data = gin.H{"errors": "empty campaignID"}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+
+	campaign, err := controller.service.FindCampaign(campaignID)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusUnprocessableEntity, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = campaign
+	c.JSON(http.StatusOK, webResponse)
 }

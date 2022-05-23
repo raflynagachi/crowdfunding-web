@@ -36,3 +36,13 @@ func (repository *CampaignRepositoryImpl) FindByUserID(userID int) ([]models.Cam
 	}
 	return campaigns, nil
 }
+
+func (repository *CampaignRepositoryImpl) FindByID(campaignID int) (models.Campaign, error) {
+	var campaign models.Campaign
+	err := repository.DB.Debug().Where("id = ?", campaignID).Preload(
+		"CampaignImages").Preload("User").Find(&campaign).Error
+	if err != nil {
+		return campaign, err
+	}
+	return campaign, nil
+}

@@ -33,3 +33,13 @@ func (service *CampaignServiceImpl) FindCampaigns(userID int) ([]web.CampaignRes
 	}
 	return helpers.CampaignsToCampaignResponses(campaigns), nil
 }
+
+func (service *CampaignServiceImpl) FindCampaign(campaignID int) (web.CampaignDetailResponse, error) {
+	campaignResponse := web.CampaignDetailResponse{}
+
+	campaign, err := service.repository.FindByID(campaignID)
+	if err != nil {
+		return campaignResponse, err
+	}
+	return helpers.CampaignToCampaignDetailResponse(campaign), nil
+}
