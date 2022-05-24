@@ -22,5 +22,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.GET("/campaigns", controller.FindCampaigns)
 	apiRoot.GET("/campaigns/:campaignID", controller.FindCampaign)
 
+	apiRoot.POST("/campaign-image", controller.AuthMiddleware.Serve, controller.CreateImage)
+
 	return router
 }

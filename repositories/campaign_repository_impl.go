@@ -62,3 +62,21 @@ func (repository *CampaignRepositoryImpl) Update(campaign models.Campaign) (mode
 	}
 	return campaign, nil
 }
+
+func (repository *CampaignRepositoryImpl) CreateImage(campaignImage models.CampaignImage) (models.CampaignImage, error) {
+	err := repository.DB.Debug().Create(&campaignImage).Error
+	if err != nil {
+		return campaignImage, err
+	}
+	return campaignImage, nil
+}
+
+func (repository *CampaignRepositoryImpl) MarkAllImagesAsNonPrimary(campaignID int) (bool, error) {
+	err := repository.DB.Debug().Model(&models.CampaignImage{}).Where("campaign_id = ?", campaignID).Update(
+		"is_primary", false,
+	).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

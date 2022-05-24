@@ -19,3 +19,9 @@ type CampaignUpdateRequest struct {
 	Perks            string  `json:"perks" binding:"required"`
 	User             models.User
 }
+
+type CampaignImageCreateRequest struct {
+	CampaignID int  `form:"campaign_id" binding:"required"`
+	IsPrimary  bool `form:"is_primary" binding:"required"`
+	User       models.User
+}

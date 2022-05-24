@@ -97,3 +97,35 @@ func (service *CampaignServiceImpl) Update(campaignID int, campaignUpdateReq web
 
 	return helpers.CampaignToCampaignResponse(campaignUpdated), nil
 }
+
+func (service *CampaignServiceImpl) CreateCampaignImage(
+	campaignImage web.CampaignImageCreateRequest,
+	fileLocation string) (web.CampaignImageResponse, error) {
+	imageResponse := web.CampaignImageResponse{}
+
+	campaign, err := service.repository.FindByID(campaignImage.CampaignID)
+	if err != nil {
+		return imageResponse, err
+	}
+	if campaign.UserID != campaignImage.User.ID {
+		return imageResponse, errors.New("unauthorized user")
+	}
+
+	if campaignImage.IsPrimary {
+		_, err := service.repository.MarkAllImagesAsNonPrimary(campaignImage.CampaignID)
+		if err != nil {
+			return imageResponse, err
+		}
+	}
+
+	campaignImageNew := models.CampaignImage{}
+	campaignImageNew.CampaignID = campaignImage.CampaignID
+	campaignImageNew.IsPrimary = campaignImage.IsPrimary
+	campaignImageNew.Filename = fileLocation
+
+	campaignImageNew, err = service.repository.CreateImage(campaignImageNew)
+	if err != nil {
+		return imageResponse, err
+	}
+	return helpers.CampaignImageToCampaignImageResponse(campaignImageNew), nil
+}

@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/raflynagachi/crowdfunding-web/helpers"
 	"github.com/raflynagachi/crowdfunding-web/models"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/services"
@@ -77,7 +79,7 @@ func (controller *CampaignControllerImpl) Create(c *gin.Context) {
 	var input web.CampaignCreateRequest
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		webResponse.Data = gin.H{"errors": err.Error()}
+		webResponse.Data = gin.H{"errors": helpers.ValidationErrorsToSlice(err)}
 		c.JSON(http.StatusBadRequest, webResponse)
 		return
 	}
@@ -107,7 +109,7 @@ func (controller *CampaignControllerImpl) Update(c *gin.Context) {
 	var input web.CampaignUpdateRequest
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		webResponse.Data = gin.H{"errors": err.Error()}
+		webResponse.Data = gin.H{"errors": helpers.ValidationErrorsToSlice(err)}
 		c.JSON(http.StatusBadRequest, webResponse)
 		return
 	}
@@ -126,5 +128,52 @@ func (controller *CampaignControllerImpl) Update(c *gin.Context) {
 	webResponse.Code = http.StatusOK
 	webResponse.Status = "OK"
 	webResponse.Data = campaign
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (controller *CampaignControllerImpl) CreateImage(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusBadRequest,
+		Status: "BAD REQUEST",
+	}
+
+	var input web.CampaignImageCreateRequest
+
+	err := c.ShouldBind(&input)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": helpers.ValidationErrorsToSlice(err), "is_uploaded": false}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	file, err := c.FormFile("campaign_image")
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error(), "is_uploaded": false}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	currentUser := c.MustGet("user").(models.User)
+	input.User = currentUser
+
+	path := fmt.Sprintf("assets/campaign_images/%d-%s", input.User.ID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error(), "is_uploaded": false}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	campaignImage, err := controller.service.CreateCampaignImage(input, path)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error(), "is_uploaded": false}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = gin.H{"is_primary": campaignImage.IsPrimary, "is_uploaded": true}
 	c.JSON(http.StatusOK, webResponse)
 }

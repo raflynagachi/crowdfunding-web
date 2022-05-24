@@ -7,4 +7,5 @@ type CampaignController interface {
 	FindCampaign(c *gin.Context)
 	Create(c *gin.Context)
 	Update(c *gin.Context)
+	CreateImage(c *gin.Context)
 }
