@@ -7,4 +7,5 @@ type CampaignRepository interface {
 	FindByID(campaignID int) (models.Campaign, error)
 	FindByUserID(userID int) ([]models.Campaign, error)
 	Create(campaign models.Campaign) (models.Campaign, error)
+	Update(campaign models.Campaign) (models.Campaign, error)
 }

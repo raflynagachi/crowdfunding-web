@@ -54,3 +54,11 @@ func (repository *CampaignRepositoryImpl) Create(campaign models.Campaign) (mode
 	}
 	return campaign, nil
 }
+
+func (repository *CampaignRepositoryImpl) Update(campaign models.Campaign) (models.Campaign, error) {
+	err := repository.DB.Debug().Save(&campaign).Error
+	if err != nil {
+		return campaign, err
+	}
+	return campaign, nil
+}

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/gosimple/slug"
@@ -68,4 +69,31 @@ func (service *CampaignServiceImpl) Create(campaignCreateReq web.CampaignCreateR
 	}
 
 	return helpers.CampaignToCampaignResponse(campaign), nil
+}
+
+func (service *CampaignServiceImpl) Update(campaignID int, campaignUpdateReq web.CampaignUpdateRequest) (web.CampaignResponse, error) {
+	var campaignResponse web.CampaignResponse
+
+	campaign, err := service.repository.FindByID(campaignID)
+	if err != nil {
+		return campaignResponse, err
+	}
+
+	if campaign.UserID != campaignUpdateReq.User.ID {
+		return campaignResponse, errors.New("unauthorized user")
+	}
+
+	campaign.Name = campaignUpdateReq.Name
+	campaign.ShortDescription = campaignUpdateReq.ShortDescription
+	campaign.Description = campaignUpdateReq.Description
+	campaign.GoalAmount = campaignUpdateReq.GoalAmount
+	campaign.Perks = campaignUpdateReq.Perks
+	campaign.User = campaignUpdateReq.User
+
+	campaignUpdated, err := service.repository.Update(campaign)
+	if err != nil {
+		return campaignResponse, err
+	}
+
+	return helpers.CampaignToCampaignResponse(campaignUpdated), nil
 }

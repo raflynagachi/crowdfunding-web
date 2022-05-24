@@ -92,14 +92,3 @@ func CampaignsToCampaignResponses(campaigns []models.Campaign) []web.CampaignRes
 	}
 	return campaignsFormatter
 }
-
-func CampaignToCampaignCreateResponse(campaign models.Campaign) web.CampaignResponse {
-	return web.CampaignResponse{
-		ID:               campaign.ID,
-		UserID:           campaign.UserID,
-		Name:             campaign.Name,
-		ShortDescription: campaign.ShortDescription,
-		GoalAmount:       campaign.GoalAmount,
-		Slug:             campaign.Slug,
-	}
-}

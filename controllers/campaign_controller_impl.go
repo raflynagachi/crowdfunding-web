@@ -97,3 +97,34 @@ func (controller *CampaignControllerImpl) Create(c *gin.Context) {
 	webResponse.Data = campaignResponse
 	c.JSON(http.StatusOK, webResponse)
 }
+
+func (controller *CampaignControllerImpl) Update(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusBadRequest,
+		Status: "BAD REQUEST",
+	}
+
+	var input web.CampaignUpdateRequest
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	currentUser := c.MustGet("user").(models.User)
+	input.User = currentUser
+
+	campaignID, _ := strconv.Atoi(c.Param("campaignID"))
+	campaign, err := controller.service.Update(campaignID, input)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = campaign
+	c.JSON(http.StatusOK, webResponse)
+}
