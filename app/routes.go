@@ -27,6 +27,9 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.GET("/campaigns/:campaignID/transactions",
 		controller.AuthMiddleware.Serve,
 		controller.TransactionController.FindByCampaignID)
+	apiRoot.GET("/transactions",
+		controller.AuthMiddleware.Serve,
+		controller.TransactionController.FindByUserID)
 
 	return router
 }

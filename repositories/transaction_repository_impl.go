@@ -23,3 +23,14 @@ func (r *TransactionRepositoryImpl) FindByCampaignID(campaignID int) ([]models.T
 	}
 	return transactions, nil
 }
+
+func (r *TransactionRepositoryImpl) FindByUserID(userID int) ([]models.Transaction, error) {
+	var transactions []models.Transaction
+	err := r.DB.Where("user_id = ?", userID).Order("id DESC").Preload(
+		"Campaign.CampaignImages", "campaign_images.is_primary = 1",
+	).Find(&transactions).Error
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
+}

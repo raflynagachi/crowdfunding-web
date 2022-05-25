@@ -47,3 +47,23 @@ func (controller *TransactionControllerImpl) FindByCampaignID(c *gin.Context) {
 	webResponse.Data = transaction
 	c.JSON(http.StatusOK, webResponse)
 }
+
+func (controller *TransactionControllerImpl) FindByUserID(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusBadRequest,
+		Status: "BAD REQUEST",
+	}
+
+	currentUser := c.MustGet("user").(models.User)
+	transactions, err := controller.service.FindByUserID(currentUser.ID)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = transactions
+	c.JSON(http.StatusOK, webResponse)
+}

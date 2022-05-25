@@ -110,3 +110,27 @@ func TransactionsToTransactionResponses(transactions []models.Transaction) []web
 	}
 	return transactionResponses
 }
+
+func TransactionToTransactionUserResponse(transaction models.Transaction) web.TransactionUserResponse {
+	var campaignImage web.CampaignImageResponse
+	if len(transaction.Campaign.CampaignImages) > 0 {
+		campaignImage = CampaignImageToCampaignImageResponse(transaction.Campaign.CampaignImages[0])
+	}
+
+	return web.TransactionUserResponse{
+		ID:            transaction.ID,
+		Amount:        transaction.Amount,
+		CreatedAt:     transaction.CreatedAt,
+		CampaignName:  transaction.Campaign.Name,
+		CampaignImage: campaignImage,
+	}
+}
+
+func TransactionsToTransactionUserResponses(transactions []models.Transaction) []web.TransactionUserResponse {
+	transactionUserResponses := []web.TransactionUserResponse{}
+	for _, transaction := range transactions {
+		transactionFormatted := TransactionToTransactionUserResponse(transaction)
+		transactionUserResponses = append(transactionUserResponses, transactionFormatted)
+	}
+	return transactionUserResponses
+}

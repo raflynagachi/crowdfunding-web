@@ -10,6 +10,7 @@ type Transaction struct {
 	Status     string  `gorm:"not null"`
 	Code       string  `gorm:"not null;index"`
 	User       User
+	Campaign   Campaign
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
