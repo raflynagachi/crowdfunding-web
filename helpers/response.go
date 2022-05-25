@@ -92,3 +92,21 @@ func CampaignsToCampaignResponses(campaigns []models.Campaign) []web.CampaignRes
 	}
 	return campaignsFormatter
 }
+
+func TransactionToTransactionResponse(transaction models.Transaction) web.TransactionResponse {
+	return web.TransactionResponse{
+		ID:        transaction.ID,
+		Name:      transaction.User.Name,
+		Amount:    transaction.Amount,
+		CreatedAt: transaction.CreatedAt,
+	}
+}
+
+func TransactionsToTransactionResponses(transactions []models.Transaction) []web.TransactionResponse {
+	transactionResponses := []web.TransactionResponse{}
+	for _, transaction := range transactions {
+		transactionFormatted := TransactionToTransactionResponse(transaction)
+		transactionResponses = append(transactionResponses, transactionFormatted)
+	}
+	return transactionResponses
+}

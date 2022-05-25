@@ -9,6 +9,7 @@ type Transaction struct {
 	Amount     float64 `gorm:"not null"`
 	Status     string  `gorm:"not null"`
 	Code       string  `gorm:"not null;index"`
+	User       User
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }

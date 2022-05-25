@@ -26,6 +26,7 @@ func main() {
 
 	userRepository := repositories.NewUserRepository(db)
 	campaignRepository := repositories.NewCampaignRepository(db)
+	transactionRepository := repositories.NewTransactionRepository(db)
 
 	authService := services.NewAuthService(userRepository)
 	jwtService := jwt.NewJwtService()
@@ -37,8 +38,16 @@ func main() {
 	campaignService := services.NewCampaignService(campaignRepository)
 	campaignController := controllers.NewCampaignController(campaignService)
 
+	transactionService := services.NewTransactionService(transactionRepository, campaignRepository)
+	transactionController := controllers.NewTransactionController(transactionService)
+
 	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)
-	controller := controllers.RegisterController(authMiddleware, authController, userController, campaignController)
+	controller := controllers.RegisterController(authMiddleware,
+		authController,
+		userController,
+		campaignController,
+		transactionController,
+	)
 
 	router := app.NewRouter(controller)
 	router.Run(":" + appConfig.AppPort)
