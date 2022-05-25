@@ -20,7 +20,7 @@ func NewTransactionService(repository repositories.TransactionRepository, campai
 	}
 }
 
-func (s *TransactionServiceImpl) FindCampaignByID(campaignID int, userID int) ([]web.TransactionResponse, error) {
+func (s *TransactionServiceImpl) FindByCampaignID(campaignID int, userID int) ([]web.TransactionResponse, error) {
 	transactionResponses := []web.TransactionResponse{}
 
 	campaign, err := s.campaignRepository.FindByID(campaignID)
@@ -31,7 +31,7 @@ func (s *TransactionServiceImpl) FindCampaignByID(campaignID int, userID int) ([
 		return transactionResponses, errors.New("unauthorized user")
 	}
 
-	transaction, err := s.repository.FindCampaignByID(campaignID)
+	transaction, err := s.repository.FindByCampaignID(campaignID)
 	if err != nil {
 		return transactionResponses, err
 	}

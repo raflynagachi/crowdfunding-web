@@ -15,7 +15,7 @@ func NewTransactionRepository(db *gorm.DB) TransactionRepository {
 	}
 }
 
-func (r *TransactionRepositoryImpl) FindCampaignByID(campaignID int) ([]models.Transaction, error) {
+func (r *TransactionRepositoryImpl) FindByCampaignID(campaignID int) ([]models.Transaction, error) {
 	var transactions []models.Transaction
 	err := r.DB.Where("campaign_id = ?", campaignID).Order("id DESC").Preload("User").Find(&transactions).Error
 	if err != nil {
