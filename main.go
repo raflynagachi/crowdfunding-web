@@ -15,6 +15,7 @@ import (
 
 func main() {
 	dbConfig, appConfig := config.ConfigEnv()
+	midtransConf := config.GetMidtransKey()
 	db := app.OpenDB(dbConfig)
 
 	flag.Parse()
@@ -38,7 +39,8 @@ func main() {
 	campaignService := services.NewCampaignService(campaignRepository)
 	campaignController := controllers.NewCampaignController(campaignService)
 
-	transactionService := services.NewTransactionService(transactionRepository, campaignRepository)
+	paymentService := services.NewPaymentService(transactionRepository, midtransConf)
+	transactionService := services.NewTransactionService(transactionRepository, campaignRepository, paymentService)
 	transactionController := controllers.NewTransactionController(transactionService)
 
 	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)

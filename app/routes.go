@@ -17,7 +17,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.POST("/email-checker", controller.IsEmailAvailable)
 	apiRoot.PUT("/avatars", controller.AuthMiddleware.Serve, controller.UpdateAvatar)
 
-	apiRoot.POST("/campaigns", controller.AuthMiddleware.Serve, controller.Create)
+	apiRoot.POST("/campaigns", controller.AuthMiddleware.Serve, controller.CampaignController.Create)
 	apiRoot.PUT("/campaigns/:campaignID", controller.AuthMiddleware.Serve, controller.Update)
 	apiRoot.GET("/campaigns", controller.FindCampaigns)
 	apiRoot.GET("/campaigns/:campaignID", controller.FindCampaign)
@@ -30,6 +30,9 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.GET("/transactions",
 		controller.AuthMiddleware.Serve,
 		controller.TransactionController.FindByUserID)
+	apiRoot.POST("/transactions",
+		controller.AuthMiddleware.Serve,
+		controller.TransactionController.Create)
 
 	return router
 }

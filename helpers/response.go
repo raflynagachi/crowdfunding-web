@@ -134,3 +134,16 @@ func TransactionsToTransactionUserResponses(transactions []models.Transaction) [
 	}
 	return transactionUserResponses
 }
+
+func TransactionToTransactionCreateResponse(transaction models.Transaction) web.TransactionCreateResponse {
+	return web.TransactionCreateResponse{
+		ID:         transaction.ID,
+		CampaignID: transaction.CampaignID,
+		UserID:     transaction.UserID,
+		Amount:     transaction.Amount,
+		Status:     transaction.Status,
+		Code:       transaction.Code,
+		PaymentUrl: transaction.PaymentUrl,
+		CreatedAt:  transaction.CreatedAt,
+	}
+}

@@ -9,6 +9,7 @@ type Transaction struct {
 	Amount     float64 `gorm:"not null"`
 	Status     string  `gorm:"not null"`
 	Code       string  `gorm:"not null;index"`
+	PaymentUrl string  `gorm:"not null"`
 	User       User
 	Campaign   Campaign
 	CreatedAt  time.Time

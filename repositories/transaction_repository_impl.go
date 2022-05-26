@@ -34,3 +34,19 @@ func (r *TransactionRepositoryImpl) FindByUserID(userID int) ([]models.Transacti
 	}
 	return transactions, nil
 }
+
+func (r *TransactionRepositoryImpl) Create(transaction models.Transaction) (models.Transaction, error) {
+	err := r.DB.Create(&transaction).Preload("User").Find(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+	return transaction, nil
+}
+
+func (r *TransactionRepositoryImpl) Update(transaction models.Transaction) (models.Transaction, error) {
+	err := r.DB.Save(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+	return transaction, nil
+}
