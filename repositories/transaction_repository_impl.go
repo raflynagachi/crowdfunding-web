@@ -50,3 +50,12 @@ func (r *TransactionRepositoryImpl) Update(transaction models.Transaction) (mode
 	}
 	return transaction, nil
 }
+
+func (r *TransactionRepositoryImpl) FindByID(ID int) (models.Transaction, error) {
+	var transaction models.Transaction
+	err := r.DB.Where("id = ?", ID).Find(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+	return transaction, nil
+}

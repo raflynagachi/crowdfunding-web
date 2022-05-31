@@ -39,9 +39,9 @@ func main() {
 	campaignService := services.NewCampaignService(campaignRepository)
 	campaignController := controllers.NewCampaignController(campaignService)
 
-	paymentService := services.NewPaymentService(transactionRepository, midtransConf)
+	paymentService := services.NewPaymentService(transactionRepository, campaignRepository, midtransConf)
 	transactionService := services.NewTransactionService(transactionRepository, campaignRepository, paymentService)
-	transactionController := controllers.NewTransactionController(transactionService)
+	transactionController := controllers.NewTransactionController(transactionService, paymentService)
 
 	authMiddleware := middleware.NewAuthMiddleware(jwtService, userService)
 	controller := controllers.RegisterController(authMiddleware,

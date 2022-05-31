@@ -7,3 +7,10 @@ type CreateTransactionRequest struct {
 	CampaignID int         `json:"campaign_id" binding:"required"`
 	User       models.User `json:"user"`
 }
+
+type NotificationTransactionRequest struct {
+	TransactionStatus string `json:"transaction_status"`
+	OrderID           string `json:"order_id"`
+	PaymentType       string `json:"payment_type"`
+	FraudStatus       string `json:"fraud_status"`
+}

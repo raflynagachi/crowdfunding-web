@@ -60,7 +60,7 @@ func (s *TransactionServiceImpl) Create(transactionReq web.CreateTransactionRequ
 		CampaignID: transactionReq.CampaignID,
 		Amount:     transactionReq.Amount,
 		UserID:     transactionReq.User.ID,
-		Status:     "PENDING",
+		Status:     "pending",
 	}
 
 	transactionCreated, err := s.repository.Create(transaction)

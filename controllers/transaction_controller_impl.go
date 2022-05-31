@@ -12,12 +12,14 @@ import (
 )
 
 type TransactionControllerImpl struct {
-	service services.TransactionService
+	service        services.TransactionService
+	paymentService services.PaymentService
 }
 
-func NewTransactionController(service services.TransactionService) TransactionController {
+func NewTransactionController(service services.TransactionService, payment services.PaymentService) TransactionController {
 	return &TransactionControllerImpl{
-		service: service,
+		service:        service,
+		paymentService: payment,
 	}
 }
 
@@ -96,5 +98,33 @@ func (controller *TransactionControllerImpl) Create(c *gin.Context) {
 	webResponse.Code = http.StatusOK
 	webResponse.Status = "OK"
 	webResponse.Data = transaction
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (controller *TransactionControllerImpl) GetNotification(c *gin.Context) {
+	webResponse := web.WebResponse{
+		Code:   http.StatusBadRequest,
+		Status: "BAD REQUEST",
+	}
+
+	var transactionReq web.NotificationTransactionRequest
+	err := c.ShouldBindJSON(&transactionReq)
+
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	err = controller.paymentService.ProcessPayment(transactionReq)
+	if err != nil {
+		webResponse.Data = gin.H{"errors": err.Error()}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	webResponse.Code = http.StatusOK
+	webResponse.Status = "OK"
+	webResponse.Data = ""
 	c.JSON(http.StatusOK, webResponse)
 }

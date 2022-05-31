@@ -33,6 +33,7 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 	apiRoot.POST("/transactions",
 		controller.AuthMiddleware.Serve,
 		controller.TransactionController.Create)
+	apiRoot.POST("/transactions/notification", controller.TransactionController.GetNotification)
 
 	return router
 }
