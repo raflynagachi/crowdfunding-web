@@ -12,6 +12,7 @@ func UserToUserResponse(user models.User) web.UserResponse {
 		Email:         user.Email,
 		Occupation:    user.Occupation,
 		TokenRemember: user.RememberToken,
+		ImageURL:      user.AvatarFilename,
 	}
 }
 

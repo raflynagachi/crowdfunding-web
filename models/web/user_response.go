@@ -6,4 +6,5 @@ type UserResponse struct {
 	Email         string `json:"email"`
 	Occupation    string `json:"occupation"`
 	TokenRemember string `json:"token_remember"`
+	ImageURL      string `json:"image_url"`
 }
