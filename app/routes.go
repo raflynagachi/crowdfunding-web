@@ -1,12 +1,14 @@
 package app
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/raflynagachi/crowdfunding-web/controllers"
 )
 
 func NewRouter(controller controllers.Controller) *gin.Engine {
 	router := gin.Default()
+	router.Use(cors.Default())
 	router.Static("/avatar-images", "./assets/avatar_images")
 	router.Static("/campaign-images", "./assets/campaign_images")
 
