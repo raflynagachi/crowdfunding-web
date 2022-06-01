@@ -11,6 +11,7 @@ import (
 	"github.com/raflynagachi/crowdfunding-web/middleware"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 	"github.com/raflynagachi/crowdfunding-web/services"
+	"github.com/raflynagachi/crowdfunding-web/web/handler"
 )
 
 func main() {
@@ -51,6 +52,9 @@ func main() {
 		transactionController,
 	)
 
-	router := app.NewRouter(controller)
+	userHandler := handler.NewUserHandler(userService)
+	webHandler := handler.RegisterController(authMiddleware, *userHandler)
+
+	router := app.NewRouter(controller, webHandler)
 	router.Run(":" + appConfig.AppPort)
 }

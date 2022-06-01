@@ -4,11 +4,13 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/raflynagachi/crowdfunding-web/controllers"
+	"github.com/raflynagachi/crowdfunding-web/web/handler"
 )
 
-func NewRouter(controller controllers.Controller) *gin.Engine {
+func NewRouter(controller controllers.Controller, webHandler handler.Controller) *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Default())
+	router.HTMLRender = LoadTemplates("./web/templates")
 	router.Static("/avatar-images", "./assets/avatar_images")
 	router.Static("/campaign-images", "./assets/campaign_images")
 
@@ -37,6 +39,8 @@ func NewRouter(controller controllers.Controller) *gin.Engine {
 		controller.AuthMiddleware.Serve,
 		controller.TransactionController.Create)
 	apiRoot.POST("/transactions/notification", controller.TransactionController.GetNotification)
+
+	router.GET("/users", webHandler.Index)
 
 	return router
 }
