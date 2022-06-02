@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/raflynagachi/crowdfunding-web/models/web"
@@ -38,6 +39,7 @@ func (h *userHandler) Create(c *gin.Context) {
 		c.HTML(http.StatusOK, "user_create.html", input)
 		return
 	}
+
 	var authInput web.AuthRegisterRequest
 	authInput.Name = input.Name
 	authInput.Email = input.Email
@@ -49,5 +51,42 @@ func (h *userHandler) Create(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "error.html", nil)
 		return
 	}
+	c.Redirect(http.StatusFound, "/users")
+}
+
+func (h *userHandler) Edit(c *gin.Context) {
+	idParam := c.Param("userID")
+	id, _ := strconv.Atoi(idParam)
+	registeredUser, err := h.userService.FindById(id)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "error.html", nil)
+	}
+	input := web.UserUpdateRequest{
+		ID:         id,
+		Name:       registeredUser.Name,
+		Email:      registeredUser.Email,
+		Occupation: registeredUser.Occupation,
+	}
+	c.HTML(http.StatusOK, "user_edit.html", input)
+}
+
+func (h *userHandler) Update(c *gin.Context) {
+	idParam := c.Param("userID")
+	id, _ := strconv.Atoi(idParam)
+
+	var input web.UserUpdateRequest
+	err := c.ShouldBind(&input)
+	if err != nil {
+		input.Error = err
+		c.HTML(http.StatusOK, "user_edit.html", input)
+	}
+
+	input.ID = id
+	_, err = h.userService.Update(input)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "error.html", nil)
+		return
+	}
+
 	c.Redirect(http.StatusFound, "/users")
 }

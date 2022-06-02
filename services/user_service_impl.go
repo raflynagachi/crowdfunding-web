@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/raflynagachi/crowdfunding-web/models"
+	"github.com/raflynagachi/crowdfunding-web/models/web"
 	"github.com/raflynagachi/crowdfunding-web/repositories"
 )
 
@@ -48,4 +49,21 @@ func (service *UserServiceImpl) FindAll() ([]models.User, error) {
 		return users, err
 	}
 	return users, nil
+}
+
+func (service *UserServiceImpl) Update(userReq web.UserUpdateRequest) (models.User, error) {
+	user, err := service.repository.FindById(userReq.ID)
+	if err != nil {
+		return user, err
+	}
+
+	user.Name = userReq.Name
+	user.Email = userReq.Email
+	user.Occupation = userReq.Occupation
+
+	updatedUser, err := service.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+	return updatedUser, nil
 }
