@@ -52,7 +52,7 @@ func main() {
 		transactionController,
 	)
 
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, authService)
 	webHandler := handler.RegisterController(authMiddleware, *userHandler)
 
 	router := app.NewRouter(controller, webHandler)

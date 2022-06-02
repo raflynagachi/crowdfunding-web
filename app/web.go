@@ -9,12 +9,12 @@ import (
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 
-	layouts, err := filepath.Glob(templatesDir + "layouts/*.html")
+	layouts, err := filepath.Glob(templatesDir + "/layouts/*")
 	if err != nil {
 		panic(err)
 	}
 
-	includes, err := filepath.Glob(templatesDir + "/**/*.html")
+	includes, err := filepath.Glob(templatesDir + "/**/*")
 	if err != nil {
 		panic(err)
 	}

@@ -156,7 +156,7 @@ func (controller *CampaignControllerImpl) CreateImage(c *gin.Context) {
 	currentUser := c.MustGet("user").(models.User)
 	input.User = currentUser
 
-	path := fmt.Sprintf("assets/campaign_images/%d-%s", input.User.ID, file.Filename)
+	path := fmt.Sprintf("assets/campaign-images/%d-%s", input.User.ID, file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {

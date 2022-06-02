@@ -48,3 +48,12 @@ func (repository *UserRepositoryImpl) FindById(userId int) (models.User, error) 
 	}
 	return user, nil
 }
+
+func (repository *UserRepositoryImpl) FindAll() ([]models.User, error) {
+	var users []models.User
+	err := repository.DB.Debug().Find(&users).Error
+	if err != nil {
+		return users, err
+	}
+	return users, nil
+}

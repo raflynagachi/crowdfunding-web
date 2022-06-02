@@ -11,8 +11,13 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	router := gin.Default()
 	router.Use(cors.Default())
 	router.HTMLRender = LoadTemplates("./web/templates")
-	router.Static("/avatar-images", "./assets/avatar_images")
-	router.Static("/campaign-images", "./assets/campaign_images")
+	router.Static("/avatar-images", "./assets/avatar-images")
+	router.Static("/campaign-images", "./assets/campaign-images")
+
+	//CMS admin
+	router.Static("/css", "./web/assets/css")
+	router.Static("/js", "./web/assets/js")
+	router.Static("/webfonts", "./web/assets/webfonts")
 
 	apiRoot := router.Group("/api/v1")
 
@@ -41,6 +46,8 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	apiRoot.POST("/transactions/notification", controller.TransactionController.GetNotification)
 
 	router.GET("/users", webHandler.Index)
+	router.GET("/users/new", webHandler.New)
+	router.POST("/users", webHandler.Create)
 
 	return router
 }

@@ -41,3 +41,11 @@ func (service *UserServiceImpl) FindById(userID int) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (service *UserServiceImpl) FindAll() ([]models.User, error) {
+	users, err := service.repository.FindAll()
+	if err != nil {
+		return users, err
+	}
+	return users, nil
+}

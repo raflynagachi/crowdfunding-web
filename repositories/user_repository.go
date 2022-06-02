@@ -7,4 +7,5 @@ type UserRepository interface {
 	Update(user models.User) (models.User, error)
 	FindByEmail(userEmail string) (models.User, error)
 	FindById(userID int) (models.User, error)
+	FindAll() ([]models.User, error)
 }
