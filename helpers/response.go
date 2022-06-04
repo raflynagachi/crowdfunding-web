@@ -35,7 +35,7 @@ func CampaignImagesToCampaignImageResponses(campaignImages []models.CampaignImag
 func CampaignToCampaignResponse(campaign models.Campaign) web.CampaignResponse {
 	var imageUrl string
 	if len(campaign.CampaignImages) == 0 {
-		imageUrl = "default.jpg"
+		imageUrl = "no-image.jpg"
 	} else {
 		imageUrl = campaign.CampaignImages[0].Filename
 	}
@@ -56,7 +56,7 @@ func CampaignToCampaignResponse(campaign models.Campaign) web.CampaignResponse {
 func CampaignToCampaignDetailResponse(campaign models.Campaign) web.CampaignDetailResponse {
 	var imageUrl string
 	if len(campaign.CampaignImages) == 0 {
-		imageUrl = "default.jpg"
+		imageUrl = "no-image.jpg"
 	} else {
 		imageUrl = campaign.CampaignImages[0].Filename
 	}

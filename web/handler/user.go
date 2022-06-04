@@ -111,7 +111,8 @@ func (h *userHandler) CreateAvatar(c *gin.Context) {
 	}
 
 	path := fmt.Sprintf("avatar-images/%d-%s", id, file.Filename)
-	err = c.SaveUploadedFile(file, path)
+	fullpath := "assets/" + path
+	err = c.SaveUploadedFile(file, fullpath)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "error.html", nil)
 		return

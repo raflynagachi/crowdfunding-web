@@ -3,15 +3,18 @@ package handler
 import "github.com/raflynagachi/crowdfunding-web/middleware"
 
 type Controller struct {
-	userHandler
+	User     userHandler
+	Campaign campaignHandler
 	middleware.AuthMiddleware
 }
 
 func RegisterController(middleware *middleware.AuthMiddleware,
 	user userHandler,
+	campaign campaignHandler,
 ) Controller {
 	return Controller{
 		AuthMiddleware: *middleware,
-		userHandler:    user,
+		User:           user,
+		Campaign:       campaign,
 	}
 }
