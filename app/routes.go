@@ -50,6 +50,8 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	router.POST("/users", webHandler.Create)
 	router.GET("/users/edit/:userID", webHandler.Edit)
 	router.POST("/users/update/:userID", webHandler.Update)
+	router.GET("/users/avatar/:userID", webHandler.NewAvatar)
+	router.POST("/users/avatar/:userID", webHandler.CreateAvatar)
 
 	return router
 }
