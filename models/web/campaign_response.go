@@ -1,5 +1,7 @@
 package web
 
+import "github.com/leekchan/accounting"
+
 type CampaignResponse struct {
 	ID               int     `json:"id"`
 	UserID           int     `json:"user_id"`
@@ -11,6 +13,12 @@ type CampaignResponse struct {
 	Slug             string  `json:"slug"`
 	ImageUrl         string  `json:"image_url"`
 }
+
+func (camp *CampaignResponse) GoalAmountFormatIDR() string {
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 2, Thousand: ".", Decimal: ","}
+	return ac.FormatMoney(camp.GoalAmount)
+}
+
 type CampaignDetailResponse struct {
 	ID                     int                     `json:"id"`
 	UserID                 int                     `json:"user_id"`
