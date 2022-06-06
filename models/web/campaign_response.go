@@ -35,6 +35,15 @@ type CampaignDetailResponse struct {
 	CampaignImageResponses []CampaignImageResponse `json:"images"`
 }
 
+func (camp CampaignDetailResponse) GoalAmountFormatIDR() string {
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 2, Thousand: ".", Decimal: ","}
+	return ac.FormatMoney(camp.GoalAmount)
+}
+func (camp CampaignDetailResponse) CurrentAmountFormatIDR() string {
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 2, Thousand: ".", Decimal: ","}
+	return ac.FormatMoney(camp.CurrentAmount)
+}
+
 type CampaignUserResponse struct {
 	Name     string `json:"name"`
 	ImageUrl string `json:"image_url"`
