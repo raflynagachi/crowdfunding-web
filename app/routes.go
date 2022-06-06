@@ -56,6 +56,10 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	router.GET("/campaigns", webHandler.Campaign.Index)
 	router.GET("/campaigns/new", webHandler.Campaign.New)
 	router.POST("/campaigns", webHandler.Campaign.Create)
+	router.GET("/campaigns/image/:id", webHandler.Campaign.NewImage)
+	router.POST("/campaigns/image/:id", webHandler.Campaign.CreateImage)
+	router.GET("/campaigns/edit/:id", webHandler.Campaign.Edit)
+	router.POST("/campaigns/edit/:id", webHandler.Campaign.Update)
 
 	return router
 }
