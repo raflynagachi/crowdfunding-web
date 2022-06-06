@@ -53,7 +53,7 @@ func main() {
 	)
 
 	userHandler := handler.NewUserHandler(userService, authService)
-	campaignHandler := handler.NewCampaignHandler(campaignService)
+	campaignHandler := handler.NewCampaignHandler(campaignService, userService)
 	webHandler := handler.RegisterController(authMiddleware, *userHandler, *campaignHandler)
 
 	router := app.NewRouter(controller, webHandler)

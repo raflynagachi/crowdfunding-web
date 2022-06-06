@@ -25,3 +25,14 @@ type CampaignImageCreateRequest struct {
 	IsPrimary  bool `form:"is_primary"`
 	User       models.User
 }
+
+type CampaignFormCreateRequest struct {
+	UserID           int     `form:"user_id" binding:"required"`
+	Name             string  `form:"name" binding:"required"`
+	ShortDescription string  `form:"short_description" binding:"required"`
+	Description      string  `form:"description" binding:"required"`
+	GoalAmount       float64 `form:"goal_amount" binding:"required"`
+	Perks            string  `form:"perks" binding:"required"`
+	Users            []models.User
+	Error            error
+}

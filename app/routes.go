@@ -45,15 +45,17 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 		controller.TransactionController.Create)
 	apiRoot.POST("/transactions/notification", controller.TransactionController.GetNotification)
 
-	router.GET("/cms/users", webHandler.User.Index)
-	router.GET("/cms/users/new", webHandler.User.New)
-	router.POST("/cms/users", webHandler.User.Create)
-	router.GET("/cms/users/edit/:userID", webHandler.User.Edit)
-	router.POST("/cms/users/update/:userID", webHandler.User.Update)
-	router.GET("/cms/users/avatar/:userID", webHandler.User.NewAvatar)
-	router.POST("/cms/users/avatar/:userID", webHandler.User.CreateAvatar)
+	router.GET("/users", webHandler.User.Index)
+	router.GET("/users/new", webHandler.User.New)
+	router.POST("/users", webHandler.User.Create)
+	router.GET("/users/edit/:userID", webHandler.User.Edit)
+	router.POST("/users/update/:userID", webHandler.User.Update)
+	router.GET("/users/avatar/:userID", webHandler.User.NewAvatar)
+	router.POST("/users/avatar/:userID", webHandler.User.CreateAvatar)
 
-	router.GET("/cms/campaigns", webHandler.Campaign.Index)
+	router.GET("/campaigns", webHandler.Campaign.Index)
+	router.GET("/campaigns/new", webHandler.Campaign.New)
+	router.POST("/campaigns", webHandler.Campaign.Create)
 
 	return router
 }
