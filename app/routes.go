@@ -70,6 +70,9 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	router.GET("/campaigns/show/:id", AuthAdminMiddleWare(), webHandler.Campaign.Show)
 
 	router.GET("/transactions", AuthAdminMiddleWare(), webHandler.Transaction.Index)
+	router.GET("/login", webHandler.Auth.New)
+	router.POST("/session", webHandler.Auth.Create)
+	router.GET("/logout", webHandler.Auth.Destroy)
 
 	return router
 }

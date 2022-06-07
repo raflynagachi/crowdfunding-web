@@ -55,7 +55,8 @@ func main() {
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService, userService)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
-	webHandler := handler.RegisterController(authMiddleware, *userHandler, *campaignHandler, *transactionHandler)
+	authHandler := handler.NewAuthHandler(authService, userService)
+	webHandler := handler.RegisterController(authMiddleware, *userHandler, *campaignHandler, *transactionHandler, *authHandler)
 
 	router := app.NewRouter(controller, webHandler)
 	router.Run(":" + appConfig.AppPort)
