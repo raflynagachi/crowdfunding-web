@@ -1,9 +1,12 @@
 package app
 
 import (
+	"net/http"
 	"path/filepath"
 
 	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
@@ -26,4 +29,15 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 		r.AddFromFiles(filepath.Base(include), files...)
 	}
 	return r
+}
+
+func AuthAdminMiddleWare() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		userIDSession := session.Get("userID")
+		if userIDSession == nil {
+			ctx.Redirect(http.StatusFound, "/login")
+			return
+		}
+	}
 }

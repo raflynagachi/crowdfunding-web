@@ -2,7 +2,10 @@ package app
 
 import (
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/raflynagachi/crowdfunding-web/app/config"
 	"github.com/raflynagachi/crowdfunding-web/controllers"
 	"github.com/raflynagachi/crowdfunding-web/web/handler"
 )
@@ -10,6 +13,10 @@ import (
 func NewRouter(controller controllers.Controller, webHandler handler.Controller) *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Default())
+
+	cookieStore := cookie.NewStore(config.GetSecret())
+	router.Use(sessions.Sessions("GoFund", cookieStore))
+
 	router.HTMLRender = LoadTemplates("./web/templates")
 	router.Static("/avatar-images", "./assets/avatar-images")
 	router.Static("/campaign-images", "./assets/campaign-images")
@@ -45,24 +52,24 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 		controller.TransactionController.Create)
 	apiRoot.POST("/transactions/notification", controller.TransactionController.GetNotification)
 
-	router.GET("/users", webHandler.User.Index)
-	router.GET("/users/new", webHandler.User.New)
-	router.POST("/users", webHandler.User.Create)
-	router.GET("/users/edit/:userID", webHandler.User.Edit)
-	router.POST("/users/update/:userID", webHandler.User.Update)
-	router.GET("/users/avatar/:userID", webHandler.User.NewAvatar)
-	router.POST("/users/avatar/:userID", webHandler.User.CreateAvatar)
+	router.GET("/users", AuthAdminMiddleWare(), webHandler.User.Index)
+	router.GET("/users/new", AuthAdminMiddleWare(), webHandler.User.New)
+	router.POST("/users", AuthAdminMiddleWare(), webHandler.User.Create)
+	router.GET("/users/edit/:userID", AuthAdminMiddleWare(), webHandler.User.Edit)
+	router.POST("/users/update/:userID", AuthAdminMiddleWare(), webHandler.User.Update)
+	router.GET("/users/avatar/:userID", AuthAdminMiddleWare(), webHandler.User.NewAvatar)
+	router.POST("/users/avatar/:userID", AuthAdminMiddleWare(), webHandler.User.CreateAvatar)
 
-	router.GET("/campaigns", webHandler.Campaign.Index)
-	router.GET("/campaigns/new", webHandler.Campaign.New)
-	router.POST("/campaigns", webHandler.Campaign.Create)
-	router.GET("/campaigns/image/:id", webHandler.Campaign.NewImage)
-	router.POST("/campaigns/image/:id", webHandler.Campaign.CreateImage)
-	router.GET("/campaigns/edit/:id", webHandler.Campaign.Edit)
-	router.POST("/campaigns/edit/:id", webHandler.Campaign.Update)
-	router.GET("/campaigns/show/:id", webHandler.Campaign.Show)
+	router.GET("/campaigns", AuthAdminMiddleWare(), webHandler.Campaign.Index)
+	router.GET("/campaigns/new", AuthAdminMiddleWare(), webHandler.Campaign.New)
+	router.POST("/campaigns", AuthAdminMiddleWare(), webHandler.Campaign.Create)
+	router.GET("/campaigns/image/:id", AuthAdminMiddleWare(), webHandler.Campaign.NewImage)
+	router.POST("/campaigns/image/:id", AuthAdminMiddleWare(), webHandler.Campaign.CreateImage)
+	router.GET("/campaigns/edit/:id", AuthAdminMiddleWare(), webHandler.Campaign.Edit)
+	router.POST("/campaigns/edit/:id", AuthAdminMiddleWare(), webHandler.Campaign.Update)
+	router.GET("/campaigns/show/:id", AuthAdminMiddleWare(), webHandler.Campaign.Show)
 
-	router.GET("/transactions", webHandler.Transaction.Index)
+	router.GET("/transactions", AuthAdminMiddleWare(), webHandler.Transaction.Index)
 
 	return router
 }
