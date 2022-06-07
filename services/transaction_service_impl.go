@@ -81,3 +81,11 @@ func (s *TransactionServiceImpl) Create(transactionReq web.CreateTransactionRequ
 
 	return helpers.TransactionToTransactionCreateResponse(transactionCreated), nil
 }
+
+func (s *TransactionServiceImpl) FindAll() ([]models.Transaction, error) {
+	transactions, err := s.repository.FindAll()
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
+}

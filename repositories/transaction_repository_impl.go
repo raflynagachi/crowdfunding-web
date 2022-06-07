@@ -59,3 +59,12 @@ func (r *TransactionRepositoryImpl) FindByID(ID int) (models.Transaction, error)
 	}
 	return transaction, nil
 }
+
+func (r *TransactionRepositoryImpl) FindAll() ([]models.Transaction, error) {
+	var transactions []models.Transaction
+	err := r.DB.Preload("Campaign").Order("id desc").Find(&transactions).Error
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
+}

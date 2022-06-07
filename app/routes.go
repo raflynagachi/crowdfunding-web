@@ -62,5 +62,7 @@ func NewRouter(controller controllers.Controller, webHandler handler.Controller)
 	router.POST("/campaigns/edit/:id", webHandler.Campaign.Update)
 	router.GET("/campaigns/show/:id", webHandler.Campaign.Show)
 
+	router.GET("/transactions", webHandler.Transaction.Index)
+
 	return router
 }
